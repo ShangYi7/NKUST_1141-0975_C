@@ -1,0 +1,4 @@
+﻿  Source.c
+c:\users\user\documents\visual studio 2015\projects\project1\project1\source.c(50): warning C4013: 'system' 未定義; 假設 extern 傳回整數
+  Project1.vcxproj -> c:\users\user\documents\visual studio 2015\Projects\Project1\Debug\Project1.exe
+  Project1.vcxproj -> c:\users\user\documents\visual studio 2015\Projects\Project1\Debug\Project1.pdb (Partial PDB)

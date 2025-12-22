@@ -1,0 +1,4 @@
+﻿  main.c
+G:\code\Program\c.c++\HW8\HW8\main.c(17,20): warning C4013: 'factor' 未定義; 假設 extern 傳回整數
+G:\code\Program\c.c++\HW8\HW8\main.c(20,20): warning C4013: 'multiple' 未定義; 假設 extern 傳回整數
+  HW8.vcxproj -> G:\code\Program\c.c++\HW8\x64\Debug\HW8.exe

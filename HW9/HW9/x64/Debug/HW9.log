@@ -1,0 +1,5 @@
+﻿  main.c
+G:\code\Program\c.c++\HW9\HW9\main.c(1,1): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+G:\code\Program\c.c++\HW9\HW9\main.c(12,15): warning C4267: '正在初始化': 將 'size_t' 轉換為 'int'，資料可能遺失
+G:\code\Program\c.c++\HW9\HW9\main.c(72,5): warning C4013: 'system' 未定義; 假設 extern 傳回整數
+  HW9.vcxproj -> G:\code\Program\c.c++\HW9\x64\Debug\HW9.exe
