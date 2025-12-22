@@ -7,7 +7,7 @@ int main()
     scanf_s("%d %d", &mode, &data);
     switch (mode)
     {
-    case 0: // 菱形
+    case 0:
         for (int i = 0; i < data; i++)
         {
             for (int s = 0; s < data - i - 1; s++)
@@ -33,15 +33,20 @@ int main()
         for (int i = 0; i < data; i++)
         {
             for (int j = 0; j < data - i; j++)
+            {
                 printf("*");
+            }
             printf("\n");
         }
+
         break;
     case 2:
         for (int i = 0; i < data; i++)
         {
-            for (int j = 0; j <= i; j++)
+            for (int j = 0; j < i + 1; j++)
+            {
                 printf("*");
+            }
             printf("\n");
         }
         break;
@@ -60,7 +65,7 @@ int main()
         {
             for (int s = 0; s < i; s++)
                 printf(" ");
-            for (int j = 0; j < data - i; j++)
+            for (int j = 0; j <= data - i - 1; j++)
                 printf("*");
             printf("\n");
         }

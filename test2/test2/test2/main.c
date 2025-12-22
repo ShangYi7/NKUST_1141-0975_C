@@ -2,36 +2,41 @@
 
 int main()
 {
-    int a, b, sum = 0;
-    int count = 1; //1 == 質數, 0 == 非質數
-    int first = 1; //判斷是否為第一個輸出
+    int a, b;
+    int f = 1;   // 判斷是否為第一次輸出
+    int con = 0; // 是否為質數
+    int sum = 0;
     scanf_s("%d %d", &a, &b);
-    // 質數判斷
     for (int i = a; i <= b; i++)
     {
-        // 0 跟 1 不是質數
-        if (i < 2){
-            continue;
-        }
-
-        for (int j = 2; j < i; j++)
+        if (i < 2)
         {
-            if (i % j == 0) //非質數
+            con = 0; // 1 和負數不是質數
+        }
+        else
+        {
+            con = 1; // 假設是質數
+            for (int j = 2; j < i; j++)
             {
-                count = 0;
-                break;
+                if (i % j == 0)
+                {
+                    con = 0; // 找到因數，不是質數
+                    break;
+                }
             }
         }
 
-        if (count == 1)
+        if (con == 1)
         {
-            if (first==0)
+            if (f != 1)
+            {
                 printf("+");
+            }
             printf("%d", i);
+            f = 0;
             sum += i;
-            first = 0;
         }
     }
-    printf("=%d\n", sum);
+    printf("=%d", sum);
     return 0;
 }

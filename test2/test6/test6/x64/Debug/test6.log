@@ -1,0 +1,4 @@
+﻿  main.c
+G:\code\Program\c.c++\NKUST_1141-0975_C\test2\test6\test6\main.c(16,15): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
+G:\code\Program\c.c++\NKUST_1141-0975_C\test2\test6\test6\main.c(48,19): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
+  test6.vcxproj -> G:\code\Program\c.c++\NKUST_1141-0975_C\test2\test6\x64\Debug\test6.exe
