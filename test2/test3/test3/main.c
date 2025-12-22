@@ -8,7 +8,26 @@ int main()
     switch (mode)
     {
     case 0: // 菱形
-
+        for (int i = 0; i < data; i++)
+        {
+            for (int s = 0; s < data - i - 1; s++)
+                printf(" ");
+            for (int j = 0; j <= i; j++)
+                printf("*");
+            for (int j = 0; j < i; j++)
+                printf("*");
+            printf("\n");
+        }
+        for (int i = 1; i < data; i++)
+        {
+            for (int s = 0; s < i; s++)
+                printf(" ");
+            for (int j = 0; j < data - i; j++)
+                printf("*");
+            for (int j = 0; j < data - i - 1; j++)
+                printf("*");
+            printf("\n");
+		}
         break;
     case 1:
         for (int i = 0; i < data; i++)

@@ -3,17 +3,17 @@
 int main()
 {
     int a, b, sum = 0;
-    int count = 0;
+    int count = 1; //1 == 質數, 0 == 非質數
     int first = 1; //判斷是否為第一個輸出
     scanf_s("%d %d", &a, &b);
     // 質數判斷
     for (int i = a; i <= b; i++)
     {
+        // 0 跟 1 不是質數
         if (i < 2){
             continue;
         }
 
-        count = 1;
         for (int j = 2; j < i; j++)
         {
             if (i % j == 0) //非質數
