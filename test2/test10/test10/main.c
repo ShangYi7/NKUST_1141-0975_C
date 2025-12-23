@@ -1,15 +1,15 @@
 #include <stdio.h>
 
-void hanoi(int n, char from, char to, char aux)
+void hanoi(int n, char A, char C, char B)
 {
     if (n == 1)
     {
-        printf("move 1 from %c to %c\n", from, to);
+        printf("move 1 A %c C %c\n", A, C);
         return;
     }
-    hanoi(n - 1, from, aux, to);
-    printf("move %d from %c to %c\n", n, from, to);
-    hanoi(n - 1, aux, to, from);
+    hanoi(n - 1, A, B, C);
+    printf("move %d A %c C %c\n", n, A, C);
+    hanoi(n - 1, B, C, A);
 }
 
 int main()
