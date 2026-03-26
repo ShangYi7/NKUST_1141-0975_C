@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.c": "c",
+        "*.h": "c",
         "iosfwd": "cpp",
         "ostream": "cpp",
         "iostream": "cpp",
@@ -14,5 +16,14 @@
         "limits": "cpp",
         "valarray": "cpp"
     },
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools",
+        "editor.formatOnSave": false
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools",
+        "editor.formatOnSave": false
+    },
+    "C_Cpp.clang_format_style": "file",
     "C_Cpp.errorSquiggles": "Disabled",
 }

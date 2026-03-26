@@ -6,12 +6,38 @@
             "type": "shell",
             "command": "g++",
             "args": [
-                "-g", "${file}", "-o", "${fileBasenameNoExtension}.exe"
+                "-g",
+                "${file}",
+                "-o",
+                "${fileBasenameNoExtension}.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc.exe 建置使用中檔案",
+            "command": "C:\\Code-driven\\MinGW\\bin\\gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "detail": "偵錯工具產生的工作。"
         }
     ]
 }
