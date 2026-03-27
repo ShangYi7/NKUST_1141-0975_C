@@ -6,13 +6,13 @@
 // 會員結構定義
 typedef struct
 {
-    char name[50];
-    char phone[20];
-    char address[100];
+    char name[11];
+    char phone[11];
+    char address[51];
 } Member;
 
 // 全局變數
-Member members[101];
+Member members[100];
 int is_used[100] = {0}; // 0 = 沒資料, 1 = 有資料
 int member_count = 0;
 int mode; // 主模組模式選擇
@@ -27,8 +27,14 @@ void query_all_members(); // 查詢所有會員
 
 int main()
 {
-    while (scanf("%d", &mode) != EOF && mode != -1)
+    while (scanf("%d", &mode) == 1)
     {
+        if (mode == -1)
+        {
+            printf("Goodbye\n");
+            return 0;
+        }
+
         switch (mode)
         {
             case 1:
@@ -38,10 +44,11 @@ int main()
 
             default:
                 // TODO: 尚未開發
+                printf("No such command\n");
                 break;
         }
     }
-    system("pause");
+
     return 0;
 }
 
@@ -49,8 +56,14 @@ void member_management()
 {
     // 會員管理模組
     int manage_mode; // 管理模組選擇
-    while (scanf("%d", &manage_mode) <= 5)
+    while (scanf("%d", &manage_mode) == 1)
     {
+        if (manage_mode < 1 || manage_mode > 5)
+        {
+            printf("Exit member function\n");
+            return;
+        }
+
         switch (manage_mode)
         {
             case 1:
@@ -78,6 +91,7 @@ void member_management()
                 break;
         }
     }
+
     return;
 }
 
@@ -85,14 +99,15 @@ void member_management()
 void add_member()
 {
     int id;
-    char name[50], phone[20], address[100];
-    scanf("%d %49s %19s %99s", &id, name, phone, address);
-    if (is_used[id] == 0)
+    char name[11], phone[11], address[51];
+    scanf("%d %10s %10s %50s", &id, name, phone, address);
+    if (is_used[id] == 0 && member_count < 100)
     {
         strcpy(members[id].name, name);
         strcpy(members[id].phone, phone);
         strcpy(members[id].address, address);
         is_used[id] = 1;
+        member_count += 1;
         printf("Creation successful\n");
     }
     else
@@ -109,8 +124,8 @@ void edit_member()
 {
     int id;
     int label_id; // 1=姓名, 2=電話, 3=地址
-    char name[50], phone[20], address[100];
-    scanf("%d %d", &id, &label_id);
+    char new_data[51];
+    scanf("%d %d %50s", &id, &label_id, new_data);
     if (is_used[id] == 0)
     {
         printf("No such ID\n");
@@ -121,16 +136,13 @@ void edit_member()
         switch (label_id)
         {
             case 1:
-                scanf("%49s", name);
-                strcpy(members[id].name, name);
+                strncpy(members[id].name, new_data, 10);
                 break;
             case 2:
-                scanf("%19s", phone);
-                strcpy(members[id].phone, phone);
+                strncpy(members[id].phone, new_data, 10);
                 break;
             case 3:
-                scanf("%99s", address);
-                strcpy(members[id].address, address);
+                strncpy(members[id].address, new_data, 50);
                 break;
         }
         printf("%d %s %s %s\n", id, members[id].name, members[id].phone, members[id].address);
@@ -150,6 +162,7 @@ void delete_member()
     else
     {
         is_used[id] = 0;
+        member_count -= 1;
         printf("Deletion successful\n");
     }
     return;
