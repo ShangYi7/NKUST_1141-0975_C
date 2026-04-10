@@ -17,6 +17,11 @@ int is_used[100] = {0}; // 0 = 沒資料, 1 = 有資料
 int member_count = 0;
 int mode; // 主模組模式選擇
 
+int is_valid_id(int id)
+{
+    return id >= 0 && id < 100;
+}
+
 // 函數聲明
 void member_management(); // 會員管理主模組
 void add_member();        // 新增
@@ -101,7 +106,7 @@ void add_member()
     int id;
     char name[11], phone[11], address[51];
     scanf("%d %10s %10s %50s", &id, name, phone, address);
-    if (is_used[id] == 0 && member_count < 100)
+    if (is_valid_id(id) && is_used[id] == 0 && member_count < 100)
     {
         strcpy(members[id].name, name);
         strcpy(members[id].phone, phone);
@@ -126,7 +131,7 @@ void edit_member()
     int label_id; // 1=姓名, 2=電話, 3=地址
     char new_data[51];
     scanf("%d %d %50s", &id, &label_id, new_data);
-    if (is_used[id] == 0)
+    if (!is_valid_id(id) || is_used[id] == 0)
     {
         printf("No such ID\n");
         return;
@@ -137,12 +142,15 @@ void edit_member()
         {
             case 1:
                 strncpy(members[id].name, new_data, 10);
+                members[id].name[10] = '\0';
                 break;
             case 2:
                 strncpy(members[id].phone, new_data, 10);
+                members[id].phone[10] = '\0';
                 break;
             case 3:
                 strncpy(members[id].address, new_data, 50);
+                members[id].address[50] = '\0';
                 break;
         }
         printf("%d %s %s %s\n", id, members[id].name, members[id].phone, members[id].address);
@@ -155,7 +163,7 @@ void delete_member()
 {
     int id;
     scanf("%d", &id);
-    if (is_used[id] == 0)
+    if (!is_valid_id(id) || is_used[id] == 0)
     {
         printf("No such ID\n");
     }
@@ -173,7 +181,7 @@ void query_member()
 {
     int id;
     scanf("%d", &id);
-    if (is_used[id] == 0)
+    if (!is_valid_id(id) || is_used[id] == 0)
     {
         printf("No such ID\n");
     }
