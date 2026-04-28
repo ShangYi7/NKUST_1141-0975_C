@@ -1,10 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "G:\\code\\Program\\c.c\u002B\u002B\\HW2\\",
+  "WorkspaceRootPath": "G:\\code\\Program\\c.c\u002B\u002B\\NKUST_1141-0975_C\\Last semester\\HW2\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{10B269AA-A424-4B65-8D86-5B0B5FC4C4D9}|HW2\\HW2.vcxproj|G:\\code\\Program\\c.c\u002B\u002B\\HW2\\HW2\\HW2.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{10B269AA-A424-4B65-8D86-5B0B5FC4C4D9}|HW2\\HW2.vcxproj|solutionrelative:HW2\\HW2.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|G:\\code\\Program\\c.c\u002B\u002B\\NKUST_1141-0975_C\\Last semester\\HW2\\HW2\\HW2.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:HW2\\HW2.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -20,11 +20,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "HW2.c",
-              "DocumentMoniker": "G:\\code\\Program\\c.c\u002B\u002B\\HW2\\HW2\\HW2.c",
+              "DocumentMoniker": "G:\\code\\Program\\c.c\u002B\u002B\\NKUST_1141-0975_C\\Last semester\\HW2\\HW2\\HW2.c",
               "RelativeDocumentMoniker": "HW2\\HW2.c",
-              "ToolTip": "G:\\code\\Program\\c.c\u002B\u002B\\HW2\\HW2\\HW2.c",
+              "ToolTip": "G:\\code\\Program\\c.c\u002B\u002B\\NKUST_1141-0975_C\\Last semester\\HW2\\HW2\\HW2.c",
               "RelativeToolTip": "HW2\\HW2.c",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2025-09-30T13:34:02.347Z",
               "EditorCaption": ""

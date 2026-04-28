@@ -1,0 +1,14 @@
+# Ignore Visual Studio workspace and temporary files
+.vs/
+*.vsidx
+
+# Visual Studio artifacts
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+*.exe
+*.obj
+*.log
