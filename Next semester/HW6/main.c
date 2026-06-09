@@ -5,11 +5,14 @@
 enum HandRank
 {
     HIGH_CARD = 0,
-    STRAIGHT = 1,
-    FLUSH = 2,
-    FULL_HOUSE = 3,
-    FOUR_OF_A_KIND = 4,
-    STRAIGHT_FLUSH = 5
+    ONE_PAIR = 1,
+    TWO_PAIR = 2,
+    THREE_OF_A_KIND = 3,
+    STRAIGHT = 4,
+    FLUSH = 5,
+    FULL_HOUSE = 6,
+    FOUR_OF_A_KIND = 7,
+    STRAIGHT_FLUSH = 8
 };
 
 // qsort 用的比較函式：由小到大排序點數
@@ -147,6 +150,18 @@ static int evaluate_five_cards(const int cards[5])
     {
         return STRAIGHT;
     }
+    if (three_count == 1)
+    {
+        return THREE_OF_A_KIND;
+    }
+    if (pair_count == 2)
+    {
+        return TWO_PAIR;
+    }
+    if (pair_count == 1)
+    {
+        return ONE_PAIR;
+    }
 
     return HIGH_CARD;
 }
@@ -166,6 +181,12 @@ static const char *hand_name(int rank)
             return "Flush";
         case STRAIGHT:
             return "Straight";
+        case THREE_OF_A_KIND:
+            return "Three of a Kind";
+        case TWO_PAIR:
+            return "Two Pair";
+        case ONE_PAIR:
+            return "One Pair";
         default:
             return "High Card";
     }
