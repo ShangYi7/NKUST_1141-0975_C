@@ -1,7 +1,7 @@
 #include <stdio.h>
 #define SIZE 15
 
-// 二元搜尋
+// 二元
 // 取中間值, 左右比較
 
 // 前置宣告：讓 binarySearch 先知道下面的輸出輔助函式
