@@ -1,83 +1,103 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
-
-#define MAX_LINE 1000
-#define MAX_STACK 1000
-
-typedef enum {
-    OPERAND,    // 期待操作數或左括號
-    OPERATOR    // 期待運算子或右括號
-} State;
 
 int main() {
-    char line[MAX_LINE];
+    char line[1000];
 
-    while (fgets(line, sizeof(line), stdin) != NULL) {
-        // 移除換行符和回車符
-        line[strcspn(line, "\r\n")] = '\0';
+    // 逐行讀取輸入的運算式，直到讀到 EOF 為止
+    while (scanf("%s", line) != EOF) {
+        char stack[1000]; // 宣告一個字元陣列作為堆疊，用來檢查括號是否成對
+        int top = -1;     // 堆疊頂端指標，-1 代表目前堆疊為空
+        int valid = 1;    // 標記運算式是否合法：1 代表合法，0 代表不合法
 
-        if (strlen(line) == 0) continue;  // 略過空行
+        // 狀態變數：用來記錄目前期待遇到什麼字元
+        // 0 代表期待「運算數 (變數 A-Z)」或「左括號」
+        // 1 代表期待「運算子 (+, *)」或「右括號」
+        int expect_op = 0;
 
-        State state = OPERAND;
-        char stack[MAX_STACK];
-        int stack_top = -1;
-        int paren_count = 0, bracket_count = 0, brace_count = 0;
-        int valid = 1;
+        int p = 0, b = 0, c = 0;  // 分別用來記錄圓括號 ()、方括號 []、大括號 {} 的對數計數器
 
-        for (int i = 0; line[i] != '\0' && valid; i++) {
-            char c = line[i];
+        // 逐字元掃描整個字串，如果 valid 已經變成 0 (不合法) 就不需要繼續檢查了
+        for (int i = 0; line[i] != '\0' && valid == 1; i++) {
+            char ch = line[i];
 
-            if (state == OPERAND) {
-                // 期待變數或左括號
-                if (c >= 'A' && c <= 'Z') {
-                    // 變數
-                    state = OPERATOR;
-                } else if (c == '(' || c == '[' || c == '{') {
-                    // 左括號
-                    stack[++stack_top] = c;
-                    if (c == '(') paren_count++;
-                    else if (c == '[') bracket_count++;
-                    else if (c == '{') brace_count++;
-                    // 狀態保持為 OPERAND
-                } else {
-                    valid = 0;
+            // 情況 1：如果遇到變數 (大寫字母 A-Z)
+            if (ch >= 'A' && ch <= 'Z') {
+                // 若目前期待的是運算子，卻出現變數 (例如 "A B")，則視為不合法
+                if (expect_op == 1) valid = 0;
+
+                // 變數後面應該要接運算子或右括號，所以將狀態切換為 1
+                expect_op = 1;
+
+            // 情況 2：如果遇到運算子 (+ 或 *)
+            } else if (ch == '+' || ch == '*') {
+                // 若目前期待的是變數，卻出現運算子 (例如 "+A" 或 "A++")，則視為不合法
+                if (expect_op == 0) valid = 0;
+
+                // 運算子後面應該要接變數或左括號，所以將狀態切換為 0
+                expect_op = 0;
+
+            // 情況 3：如果遇到左括號
+            } else if (ch == '(' || ch == '[' || ch == '{') {
+                // 將左括號推入堆疊 (Push)
+                top++;
+                stack[top] = ch;
+
+                // 依據括號種類，增加對應的計數器
+                if (ch == '(') {
+                    p++;
+                } else if (ch == '[') {
+                    b++;
+                } else if (ch == '{') {
+                    c++;
                 }
-            } else { // state == OPERATOR
-                // 期待運算子或右括號
-                if (c == '+' || c == '*') {
-                    state = OPERAND;
-                } else if (c == ')' || c == ']' || c == '}') {
-                    // 檢查括號匹配
-                    if (stack_top < 0) {
-                        valid = 0;
-                        break;
+
+                // 左括號內部必須是一個新的子運算式，所以開頭必須是變數或左括號
+                // 將狀態切換為 0
+                expect_op = 0;
+
+            // 情況 4：如果遇到右括號
+            } else if (ch == ')' || ch == ']' || ch == '}') {
+                // 如果堆疊是空的，代表沒有對應的左括號可以配對，不合法
+                if (top < 0) {
+                    valid = 0;
+                } else {
+                    // 找出這個右括號應該要配對哪一種左括號
+                    char match;
+                    if (ch == ')') {
+                        match = '(';
+                    } else if (ch == ']') {
+                        match = '[';
+                    } else {
+                        match = '{';
                     }
 
-                    char expected;
-                    if (c == ')') expected = '(';
-                    else if (c == ']') expected = '[';
-                    else expected = '{';
-
-                    if (stack[stack_top] != expected) {
+                    // 檢查堆疊最上層的括號是否與我們期待的相符
+                    if (stack[top] == match) {
+                        // 如果相符，就把該左括號從堆疊彈出 (Pop)
+                        top--;
+                    } else {
+                        // 如果不相符 (例如遇到 ']' 但堆疊頂端是 '(' )，則不合法
                         valid = 0;
-                        break;
                     }
-
-                    stack_top--;
-                    // 狀態保持為 OPERATOR
-                } else {
-                    valid = 0;
                 }
+
+                // 一個括號包起來的區塊視同一個變數，所以右括號後面應該接運算子或另一個右括號
+                // 將狀態切換為 1
+                expect_op = 1;
+
+            // 情況 5：遇到其他非法的字元
+            } else {
+                valid = 0;  // 直接判定為無效字元
             }
         }
 
-        // 檢查最後的條件
-        // 1. 所有括號必須匹配（stack 為空）
-        // 2. 必須停在 OPERATOR 狀態
-        if (valid && stack_top == -1 && state == OPERATOR) {
-            printf("true ():%d []:%d {}:%d\n", paren_count, bracket_count, brace_count);
+        // 最後結算：必須同時滿足以下三個條件才算是合法的運算式：
+        // 1. 掃描過程中沒有觸發任何不合法條件 (valid == 1)
+        // 2. 堆疊必須全空，代表所有左括號都有找到右括號配對 (top == -1)
+        // 3. 結尾狀態必須是期待運算子，這樣才代表字串不是以運算子結尾 (例如 "A+" 是錯的) (expect_op == 1)
+        if (valid == 1 && top == -1 && expect_op == 1) {
+            printf("true ():%d []:%d {}:%d\n", p, b, c);
         } else {
             printf("false\n");
         }

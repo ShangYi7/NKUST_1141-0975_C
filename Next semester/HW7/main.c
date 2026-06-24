@@ -1,211 +1,306 @@
-#include <iostream>
-#include <string>
-#include <cctype>
-
-using namespace std;
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 // 協助函式: 從 token 中擷取符合題目定義的單字 (前後去標點，中間全為英文字母)
-string extract_word(string token) {
+void extract_word(const char *token, char *core) {
+    int len = strlen(token);
     int start = 0;
+    int end = len - 1;
+
     // 移除前端標點符號
-    while(start < token.length() && ispunct(token[start])) {
+    while (start <= end && ispunct((unsigned char)token[start])) {
         start++;
     }
-    int end = token.length() - 1;
     // 移除後端標點符號
-    while(end >= start && ispunct(token[end])) {
+    while (end >= start && ispunct((unsigned char)token[end])) {
         end--;
     }
 
-    if(start > end) return ""; // 全是標點符號
-
-    string core = token.substr(start, end - start + 1);
-    // 檢查剩餘部分是否全為英文字母
-    for(char c : core) {
-        if(!isalpha(c)) return "";
+    if (start > end) {
+        core[0] = '\0'; // 全是標點符號
+        return;
     }
-    return core;
+
+    // 複製中間的部分
+    int core_idx = 0;
+    for (int i = start; i <= end; i++) {
+        core[core_idx++] = token[i];
+    }
+    core[core_idx] = '\0';
+
+    // 檢查剩餘部分是否全為英文字母
+    for (int i = 0; i < core_idx; i++) {
+        if (!isalpha((unsigned char)core[i])) {
+            core[0] = '\0';
+            return;
+        }
+    }
 }
 
 int main() {
     int cmd;
-    string current_string = "";
+    char current_string[10000] = "";
 
     // 持續讀取功能代號
-    while (cin >> cmd) {
-        if (cmd < 1 || cmd > 10) break; // 輸入非 1~10 代號則結束程式
+    while (scanf("%d", &cmd) == 1) {
+        if (cmd < 1 || cmd > 10) break;
 
         if (cmd == 1) {
-            string input;
-            cin >> ws; // 忽略前面的空白字元與換行
-            getline(cin, input);
-            // 若目前文本已有內容，加入一個空白作為區隔
-            if (!current_string.empty()) current_string += " ";
-            current_string += input;
-            cout << "Current string=" << current_string << "\n";
+            char input[10000];
+            input[0] = '\0';
+
+            // 跳過前置空白字元與換行
+            int c;
+            while ((c = getchar()) != EOF && isspace(c));
+            if (c != EOF) {
+                ungetc(c, stdin);
+            }
+
+            if (fgets(input, sizeof(input), stdin) != NULL) {
+                // 移除尾端的換行字元
+                input[strcspn(input, "\r\n")] = '\0';
+
+                // 若目前文本已有內容，加入一個空白作為區隔
+                if (strlen(current_string) > 0 && strlen(input) > 0) {
+                    strcat(current_string, " ");
+                }
+                strcat(current_string, input);
+            }
+            printf("Current string=%s\n", current_string);
         }
         else if (cmd == 2) {
-            cout << "Total number of characters=" << current_string.length() << "\n";
+            // 強制轉型避免 warning
+            printf("Total number of characters=%lu\n", (unsigned long)strlen(current_string));
         }
         else if (cmd == 3) {
             int count = 0;
-            for (char c : current_string) {
-                if (isalpha(c)) count++;
+            for (int i = 0; current_string[i] != '\0'; i++) {
+                if (isalpha((unsigned char)current_string[i])) {
+                    count++;
+                }
             }
-            cout << "Number of English letters=" << count << "\n";
+            printf("Number of English letters=%d\n", count);
         }
         else if (cmd == 4) {
             int tokens = 0;
-            size_t start = 0;
-            while (start < current_string.length()) {
-                while (start < current_string.length() && isspace(current_string[start])) start++;
-                if (start == current_string.length()) break;
-                size_t end = start;
-                while (end < current_string.length() && !isspace(current_string[end])) end++;
+            int i = 0;
+            int len = strlen(current_string);
+
+            while (i < len) {
+                while (i < len && isspace((unsigned char)current_string[i])) i++;
+                if (i == len) break;
+
+                int end = i;
+                while (end < len && !isspace((unsigned char)current_string[end])) end++;
+
                 tokens++;
-                start = end;
+                i = end;
             }
-            cout << "Number of tokens=" << tokens << "\n";
+            printf("Number of tokens=%d\n", tokens);
         }
         else if (cmd == 5) {
             int words = 0;
-            size_t start = 0;
-            while (start < current_string.length()) {
-                while (start < current_string.length() && isspace(current_string[start])) start++;
-                if (start == current_string.length()) break;
-                size_t end = start;
-                while (end < current_string.length() && !isspace(current_string[end])) end++;
+            int i = 0;
+            int len = strlen(current_string);
 
-                string token = current_string.substr(start, end - start);
-                if (!extract_word(token).empty()) words++;
+            while (i < len) {
+                while (i < len && isspace((unsigned char)current_string[i])) i++;
+                if (i == len) break;
 
-                start = end;
+                int end = i;
+                while (end < len && !isspace((unsigned char)current_string[end])) end++;
+
+                char token[1000];
+                int token_len = end - i;
+                strncpy(token, &current_string[i], token_len);
+                token[token_len] = '\0';
+
+                char core[1000];
+                extract_word(token, core);
+                if (strlen(core) > 0) {
+                    words++;
+                }
+                i = end;
             }
-            cout << "Number of words=" << words << "\n";
+            printf("Number of words=%d\n", words);
         }
         else if (cmd == 6) {
-            string keyword;
-            cin >> keyword;
+            char keyword[1000];
+            scanf("%s", keyword);
+
             int count = 0;
-            size_t start = 0;
-            while (start < current_string.length()) {
-                while (start < current_string.length() && isspace(current_string[start])) start++;
-                if (start == current_string.length()) break;
-                size_t end = start;
-                while (end < current_string.length() && !isspace(current_string[end])) end++;
+            int i = 0;
+            int len = strlen(current_string);
 
-                string token = current_string.substr(start, end - start);
-                if (extract_word(token) == keyword) count++;
+            while (i < len) {
+                while (i < len && isspace((unsigned char)current_string[i])) i++;
+                if (i == len) break;
 
-                start = end;
+                int end = i;
+                while (end < len && !isspace((unsigned char)current_string[end])) end++;
+
+                char token[1000];
+                int token_len = end - i;
+                strncpy(token, &current_string[i], token_len);
+                token[token_len] = '\0';
+
+                char core[1000];
+                extract_word(token, core);
+                if (strcmp(core, keyword) == 0) {
+                    count++;
+                }
+                i = end;
             }
-            cout << "Number of keywords=" << count << "\n";
+            printf("Number of keywords=%d\n", count);
         }
         else if (cmd == 7) {
-            string longest = "";
-            size_t start = 0;
-            while (start < current_string.length()) {
-                while (start < current_string.length() && isspace(current_string[start])) start++;
-                if (start == current_string.length()) break;
-                size_t end = start;
-                while (end < current_string.length() && !isspace(current_string[end])) end++;
+            char longest[1000] = "";
+            int i = 0;
+            int len = strlen(current_string);
 
-                string token = current_string.substr(start, end - start);
-                string w = extract_word(token);
-                // 使用 > 確保若長度相同，保留最早遇到的單字
-                if (!w.empty() && w.length() > longest.length()) {
-                    longest = w;
+            while (i < len) {
+                while (i < len && isspace((unsigned char)current_string[i])) i++;
+                if (i == len) break;
+
+                int end = i;
+                while (end < len && !isspace((unsigned char)current_string[end])) end++;
+
+                char token[1000];
+                int token_len = end - i;
+                strncpy(token, &current_string[i], token_len);
+                token[token_len] = '\0';
+
+                char core[1000];
+                extract_word(token, core);
+                // > 確保長度相同時，保留最早遇到的
+                if (strlen(core) > strlen(longest)) {
+                    strcpy(longest, core);
                 }
-
-                start = end;
+                i = end;
             }
-            cout << "Longest word=" << longest << "\n";
+            printf("Longest word=%s\n", longest);
         }
         else if (cmd == 8) {
-            string keyword;
-            cin >> keyword;
-            size_t start = 0;
-            while (start < current_string.length()) {
-                while (start < current_string.length() && isspace(current_string[start])) start++;
-                if (start == current_string.length()) break;
-                size_t end = start;
-                while (end < current_string.length() && !isspace(current_string[end])) end++;
+            char keyword[1000];
+            scanf("%s", keyword);
 
-                string token = current_string.substr(start, end - start);
+            int i = 0;
+            while (current_string[i] != '\0') {
+                int len = strlen(current_string);
 
-                int w_start = 0, w_end = token.length() - 1;
-                while (w_start <= w_end && ispunct(token[w_start])) w_start++;
-                while (w_end >= w_start && ispunct(token[w_end])) w_end--;
+                while (i < len && isspace((unsigned char)current_string[i])) i++;
+                if (i == len) break;
+
+                int end = i;
+                while (end < len && !isspace((unsigned char)current_string[end])) end++;
+
+                int w_start = i;
+                int w_end = end - 1;
+                while (w_start <= w_end && ispunct((unsigned char)current_string[w_start])) w_start++;
+                while (w_end >= w_start && ispunct((unsigned char)current_string[w_end])) w_end--;
 
                 if (w_start <= w_end) {
-                    string core = token.substr(w_start, w_end - w_start + 1);
-                    bool is_w = true;
-                    for (char c : core) if (!isalpha(c)) is_w = false;
+                    char core[1000];
+                    int core_len = w_end - w_start + 1;
+                    strncpy(core, &current_string[w_start], core_len);
+                    core[core_len] = '\0';
 
-                    // 若找到相符的關鍵字，將文本中對應的位置轉大寫
-                    if (is_w && core == keyword) {
-                        for (int j = 0; j < core.length(); j++) {
-                            current_string[start + w_start + j] = toupper(current_string[start + w_start + j]);
+                    int is_w = 1;
+                    for (int j = 0; j < core_len; j++) {
+                        if (!isalpha((unsigned char)core[j])) {
+                            is_w = 0;
+                            break;
+                        }
+                    }
+
+                    if (is_w && strcmp(core, keyword) == 0) {
+                        for (int j = w_start; j <= w_end; j++) {
+                            current_string[j] = toupper((unsigned char)current_string[j]);
                         }
                     }
                 }
-                start = end;
+                i = end;
             }
-            cout << "Current string=" << current_string << "\n";
+            printf("Current string=%s\n", current_string);
         }
         else if (cmd == 9) {
-            string keyword;
-            cin >> keyword;
-            size_t start = 0;
-            while (start < current_string.length()) {
-                while (start < current_string.length() && isspace(current_string[start])) start++;
-                if (start == current_string.length()) break;
-                size_t end = start;
-                while (end < current_string.length() && !isspace(current_string[end])) end++;
+            char keyword[1000];
+            scanf("%s", keyword);
 
-                string token = current_string.substr(start, end - start);
+            int i = 0;
+            while (current_string[i] != '\0') {
+                int len = strlen(current_string);
 
-                int w_start = 0, w_end = token.length() - 1;
-                while (w_start <= w_end && ispunct(token[w_start])) w_start++;
-                while (w_end >= w_start && ispunct(token[w_end])) w_end--;
+                while (i < len && isspace((unsigned char)current_string[i])) i++;
+                if (i == len) break;
+
+                int end = i;
+                while (end < len && !isspace((unsigned char)current_string[end])) end++;
+
+                int w_start = i;
+                int w_end = end - 1;
+                while (w_start <= w_end && ispunct((unsigned char)current_string[w_start])) w_start++;
+                while (w_end >= w_start && ispunct((unsigned char)current_string[w_end])) w_end--;
 
                 if (w_start <= w_end) {
-                    string core = token.substr(w_start, w_end - w_start + 1);
-                    bool is_w = true;
-                    for (char c : core) if (!isalpha(c)) is_w = false;
+                    char core[1000];
+                    int core_len = w_end - w_start + 1;
+                    strncpy(core, &current_string[w_start], core_len);
+                    core[core_len] = '\0';
 
-                    // 若找到相符的關鍵字，直接從原字串中抹除該單字核心，保留原有的空白與標點
-                    if (is_w && core == keyword) {
-                        current_string.erase(start + w_start, core.length());
-                        end -= core.length(); // 因為字串縮短了，調整 end 指標
+                    int is_w = 1;
+                    for (int j = 0; j < core_len; j++) {
+                        if (!isalpha((unsigned char)core[j])) {
+                            is_w = 0;
+                            break;
+                        }
+                    }
+
+                    if (is_w && strcmp(core, keyword) == 0) {
+                        // 使用 memmove 移除關鍵字，把後面的字串往前挪
+                        memmove(&current_string[w_start], &current_string[w_start + core_len], len - (w_start + core_len) + 1);
+                        end -= core_len; // 調整 end 指標
                     }
                 }
-                start = end;
+                i = end;
             }
-            cout << "Current string=" << current_string << "\n";
+            printf("Current string=%s\n", current_string);
         }
         else if (cmd == 10) {
-            bool found = false;
-            for (size_t i = 0; i < current_string.length(); ) {
-                // 判斷是否為數字開頭 (直接是數字，或是正負號後面緊接數字)
-                if (isdigit(current_string[i]) || ( (current_string[i] == '-' || current_string[i] == '+') && i + 1 < current_string.length() && isdigit(current_string[i+1]) )) {
-                    int start = i;
-                    if (current_string[i] == '-' || current_string[i] == '+') i++;
-                    while (i < current_string.length() && isdigit(current_string[i])) i++;
+            int found = 0;
+            int i = 0;
+            while (current_string[i] != '\0') {
+                int len = strlen(current_string);
+                char c = current_string[i];
 
-                    string num_str = current_string.substr(start, i - start);
-                    // 根據是否有自帶符號來決定是否補上 '+'
-                    if (num_str[0] != '-' && num_str[0] != '+') {
-                        cout << "+" << num_str << "\n";
-                    } else {
-                        cout << num_str << "\n";
+                int has_sign = (c == '-' || c == '+');
+                int next_is_digit = (i + 1 < len && isdigit((unsigned char)current_string[i + 1]));
+
+                if (isdigit((unsigned char)c) || (has_sign && next_is_digit)) {
+                    int start = i;
+                    if (has_sign) i++;
+
+                    while (i < len && isdigit((unsigned char)current_string[i])) {
+                        i++;
                     }
-                    found = true;
+
+                    char num_str[1000];
+                    int num_len = i - start;
+                    strncpy(num_str, &current_string[start], num_len);
+                    num_str[num_len] = '\0';
+
+                    if (num_str[0] != '-' && num_str[0] != '+') {
+                        printf("+%s\n", num_str);
+                    } else {
+                        printf("%s\n", num_str);
+                    }
+                    found = 1;
                 } else {
                     i++;
                 }
             }
-            if (!found) cout << "NONE\n";
+            if (!found) printf("NONE\n");
         }
     }
     return 0;
